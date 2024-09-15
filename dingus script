@@ -1,70 +1,84 @@
+-- Load Kavo UI Library
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("dingus script for you little goobers <33", "Ocean")
- 
--- Slap Aura Section
+local Window = Library.CreateLib("dingus script for the goobers who play it", "Ocean")
+
+-- Create Main Tab
 local MainTab = Window:NewTab("Main")
-local MainSection = MainTab:NewSection("Main")
-local MainSection = MainTab:NewSection("main stuff")
 
-MainSection:NewButton("Hider ESP, very broken btw", "puts the players name underneath the hider.", function()
-        -- Dingus ESP Script
--- Services
-local Players = game:GetService("Players")
-local Workspace = game:GetService("Workspace")
+-- Create Sections
+local ESPSection = MainTab:NewSection("Dingus ESP")
+local ColorSection = MainTab:NewSection("Dingus Change Color")
 
--- Function to create ESP
-local function createESP(part)
-    local espBox = Instance.new("BoxHandleAdornment")
-    espBox.Size = part.Size + Vector3.new(0.1, 0.1, 0.1) -- Adjust size for better visibility
-    espBox.AlwaysOnTop = true
-    espBox.ZIndex = 10
-    espBox.Adornee = part
-    espBox.Color3 = Color3.fromRGB(255, 0, 0) -- Red color for ESP
-    espBox.Transparency = 0
-    espBox.Parent = part
-end
+-- Variables
+local ESPEnabled = false
+local ESPConnection
 
--- Function to check players in Workspace
-local function checkForPlayers()
-    for _, player in ipairs(Players:GetPlayers()) do
-        -- Check if the player's name exists in the Workspace
-        local character = Workspace:FindFirstChild(player.Name)
-        if character and character:FindFirstChild("Rig") and character.Rig:FindFirstChild("HumanoidRootPart") then
-            -- Apply ESP to HumanoidRootPart
-            local humanoidRootPart = character.Rig.HumanoidRootPart
-            createESP(humanoidRootPart)
+-- Dingus ESP Script (As Function)
+local function DingusESP()
+    -- Services
+    local Players = game:GetService("Players")
+    local Workspace = game:GetService("Workspace")
+
+    -- Function to create ESP
+    local function createESP(part)
+        local espBox = Instance.new("BoxHandleAdornment")
+        espBox.Size = part.Size + Vector3.new(0.1, 0.1, 0.1) -- Adjust size for better visibility
+        espBox.AlwaysOnTop = true
+        espBox.ZIndex = 10
+        espBox.Adornee = part
+        espBox.Color3 = Color3.fromRGB(255, 0, 0) -- Red color for ESP
+        espBox.Transparency = 0
+        espBox.Parent = part
+    end
+
+    -- Function to check players in Workspace
+    local function checkForPlayers()
+        for _, player in ipairs(Players:GetPlayers()) do
+            -- Check if the player's name exists in the Workspace
+            local character = Workspace:FindFirstChild(player.Name)
+            if character and character:FindFirstChild("Rig") and character.Rig:FindFirstChild("HumanoidRootPart") then
+                -- Apply ESP to HumanoidRootPart
+                local humanoidRootPart = character.Rig.HumanoidRootPart
+                createESP(humanoidRootPart)
+            end
         end
     end
+
+    -- Connect to Player Added/Removing events to update ESP in real-time
+    ESPConnection = Players.PlayerAdded:Connect(checkForPlayers)
+    Players.PlayerRemoving:Connect(checkForPlayers)
+
+    -- Initial run
+    checkForPlayers()
 end
 
--- Connect to Player Added/Removing events to update ESP in real-time
-Players.PlayerAdded:Connect(checkForPlayers)
-Players.PlayerRemoving:Connect(checkForPlayers)
+-- Dingus Change Color Script (As Function)
+local function DingusChangeColor()
+    local args = {
+        [1] = 1186
+    }
 
--- Initial run
-checkForPlayers()
+    game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("TypedRemotes"):WaitForChild("15"):FireServer(unpack(args))
 
-    end)
+    wait(4.01)
 
-    MainSection:NewButton("Change Your Shirt Color", function()
-    -- Dingus Change Color Script
-local args = {
-    [1] = 1186
-}
+    local args = {
+        [1] = 1186
+    }
 
-game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("TypedRemotes"):WaitForChild("15"):FireServer(unpack(args))
-wait(4.01)
-local args = {
-    [1] = 1186
-}
+    game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("TypedRemotes"):WaitForChild("17"):InvokeServer(unpack(args))
+end
 
-game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("TypedRemotes"):WaitForChild("17"):InvokeServer(unpack(args))
+-- Add Toggle for Dingus ESP
+ESPSection:NewButton("Hider ESP", "Enable/Disable Dingus ESP", function(state)
+    
+        ESPEnabled = true
+        DingusESP()
 end)
 
-local ExtraTab = Window:NewTab("Extra")
-local ExtraSection = ExtraTab:NewSection("Extra")
-local ExtraSection = ExtraTab:NewSection("Extra stuff")
-
-ExtraSection:NewButton("Infinite Yield", function()
-loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+-- Add Button for Dingus Change Color
+ColorSection:NewButton("Change Shirt Color Color", "Change Dingus Color", function()
+    DingusChangeColor()
 end)
+
+
