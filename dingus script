@@ -7,7 +7,7 @@ local MainTab = Window:NewTab("Main")
 
 -- Create Sections
 local ESPSection = MainTab:NewSection("Dingus ESP")
-local ColorSection = MainTab:NewSection("Dingus Change Color")
+local HunterSection = MainTab:NewSection("Kill All Hiders") 
 
 -- Variables
 local ESPEnabled = false
@@ -26,8 +26,8 @@ local function DingusESP()
         espBox.AlwaysOnTop = true
         espBox.ZIndex = 10
         espBox.Adornee = part
-        espBox.Color3 = Color3.fromRGB(255, 0, 0) -- Red color for ESP
-        espBox.Transparency = 0
+        espBox.Color3 = Color3.new(0.517647, 0.000000, 1.000000) -- Red color for ESP
+        espBox.Transparency = 0.7
         espBox.Parent = part
     end
 
@@ -52,33 +52,45 @@ local function DingusESP()
     checkForPlayers()
 end
 
--- Dingus Change Color Script (As Function)
-local function DingusChangeColor()
-    local args = {
-        [1] = 1186
-    }
 
-    game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("TypedRemotes"):WaitForChild("15"):FireServer(unpack(args))
 
-    wait(4.01)
+-- Kill ALl Script
+local function executeForMatchingPlayers(hunterName)
+    local Players = game:GetService("Players")
+    local Workspace = game:GetService("Workspace")
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-    local args = {
-        [1] = 1186
-    }
+    -- Loop through each player in the Players service
+    for _, player in ipairs(Players:GetPlayers()) do
+        -- Skip the hunter (the player who is running the script)
+        if player.Name ~= hunterName then
+            -- Check if a part with the player's name exists in the workspace
+            local playerPart = Workspace:FindFirstChild(player.Name)
+            if playerPart then
+                -- Create the arguments table with the matching player's part
+                local args = {
+                    [1] = playerPart -- Use the player's part in the workspace
+                }
 
-    game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("TypedRemotes"):WaitForChild("17"):InvokeServer(unpack(args))
+                -- Invoke the server for this player part
+                ReplicatedStorage:WaitForChild("Modules"):WaitForChild("TypedRemotes"):WaitForChild("24"):InvokeServer(unpack(args))
+
+                -- Wait 0.1 seconds before moving on to the next player
+                wait(0.1)
+            end
+        end
+    end
 end
 
 -- Add Toggle for Dingus ESP
 ESPSection:NewButton("Hider ESP", "Enable/Disable Dingus ESP", function(state)
-    
-        ESPEnabled = true
-        DingusESP()
-end)
-
--- Add Button for Dingus Change Color
-ColorSection:NewButton("Change Shirt Color Color", "Change Dingus Color", function()
-    DingusChangeColor()
+    ESPEnabled = true
+    DingusESP()
 end)
 
 
+-- Add Button for Hunter script
+HunterSection:NewButton("Kill All Players", "kill people", function()
+    local hunter = game.Players.LocalPlayer.Name
+    executeForMatchingPlayers(hunter)
+end)
