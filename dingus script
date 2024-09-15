@@ -1,30 +1,30 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("dingus script for you little goobers", "Ocean")
+local Window = Library.CreateLib("dingus script for you little goobers <33", "Ocean")
  
--- main section declarations
+-- Slap Aura Section
 local MainTab = Window:NewTab("Main")
 local MainSection = MainTab:NewSection("Main")
 local MainSection = MainTab:NewSection("main stuff")
 
-MainSection:NewButton("Hider ESP, very broken btw", "puts a red box on the hiders head.", function()
+MainSection:NewButton("Hider ESP, very broken btw", "puts the players name underneath the hider.", function()
         -- Dingus ESP Script
--- services
+-- Services
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 
--- create ESP
+-- Function to create ESP
 local function createESP(part)
     local espBox = Instance.new("BoxHandleAdornment")
-    espBox.Size = part.Size + Vector3.new(0.1, 0.1, 0.1) -- adjust size for better visibility, or dont
+    espBox.Size = part.Size + Vector3.new(0.1, 0.1, 0.1) -- Adjust size for better visibility
     espBox.AlwaysOnTop = true
     espBox.ZIndex = 10
     espBox.Adornee = part
-    espBox.Color3 = Color3.fromRGB(255, 0, 0) --RGB values that can be changed with a quick google search?!?!?!
-    espBox.Transparency = 0.5
+    espBox.Color3 = Color3.fromRGB(255, 0, 0) -- Red color for ESP
+    espBox.Transparency = 0
     espBox.Parent = part
 end
 
--- function to check players in Workspace
+-- Function to check players in Workspace
 local function checkForPlayers()
     for _, player in ipairs(Players:GetPlayers()) do
         -- Check if the player's name exists in the Workspace
@@ -37,7 +37,7 @@ local function checkForPlayers()
     end
 end
 
--- constant checking to add or remove the esp when a player dies, leaves, joins, etc..
+-- Connect to Player Added/Removing events to update ESP in real-time
 Players.PlayerAdded:Connect(checkForPlayers)
 Players.PlayerRemoving:Connect(checkForPlayers)
 
@@ -51,12 +51,20 @@ checkForPlayers()
 local args = {
     [1] = 1186
 }
--- specific code ran when pressing the "change color" button
+
 game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("TypedRemotes"):WaitForChild("15"):FireServer(unpack(args))
-wait(4.01) -- waiting the shortest amount of time possible
+wait(4.01)
 local args = {
     [1] = 1186
 }
 
 game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("TypedRemotes"):WaitForChild("17"):InvokeServer(unpack(args))
+end)
+
+local ExtraTab = Window:NewTab("Extra")
+local ExtraSection = ExtraTab:NewSection("Extra")
+local ExtraSection = ExtraTab:NewSection("Extra stuff")
+
+ExtraSection:NewButton("Infinite Yield", function()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
 end)
