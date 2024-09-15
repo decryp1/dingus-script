@@ -1,0 +1,62 @@
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("dingus script for you little goobers", "Ocean")
+ 
+-- main section declarations
+local MainTab = Window:NewTab("Main")
+local MainSection = MainTab:NewSection("Main")
+local MainSection = MainTab:NewSection("main stuff")
+
+MainSection:NewButton("Hider ESP, very broken btw", "puts a red box on the hiders head.", function()
+        -- Dingus ESP Script
+-- services
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+
+-- create ESP
+local function createESP(part)
+    local espBox = Instance.new("BoxHandleAdornment")
+    espBox.Size = part.Size + Vector3.new(0.1, 0.1, 0.1) -- adjust size for better visibility, or dont
+    espBox.AlwaysOnTop = true
+    espBox.ZIndex = 10
+    espBox.Adornee = part
+    espBox.Color3 = Color3.fromRGB(255, 0, 0) --RGB values that can be changed with a quick google search?!?!?!
+    espBox.Transparency = 0.5
+    espBox.Parent = part
+end
+
+-- function to check players in Workspace
+local function checkForPlayers()
+    for _, player in ipairs(Players:GetPlayers()) do
+        -- Check if the player's name exists in the Workspace
+        local character = Workspace:FindFirstChild(player.Name)
+        if character and character:FindFirstChild("Rig") and character.Rig:FindFirstChild("HumanoidRootPart") then
+            -- Apply ESP to HumanoidRootPart
+            local humanoidRootPart = character.Rig.HumanoidRootPart
+            createESP(humanoidRootPart)
+        end
+    end
+end
+
+-- constant checking to add or remove the esp when a player dies, leaves, joins, etc..
+Players.PlayerAdded:Connect(checkForPlayers)
+Players.PlayerRemoving:Connect(checkForPlayers)
+
+-- Initial run
+checkForPlayers()
+
+    end)
+
+    MainSection:NewButton("Change Your Shirt Color", function()
+    -- Dingus Change Color Script
+local args = {
+    [1] = 1186
+}
+-- specific code ran when pressing the "change color" button
+game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("TypedRemotes"):WaitForChild("15"):FireServer(unpack(args))
+wait(4.01) -- waiting the shortest amount of time possible
+local args = {
+    [1] = 1186
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Modules"):WaitForChild("TypedRemotes"):WaitForChild("17"):InvokeServer(unpack(args))
+end)
