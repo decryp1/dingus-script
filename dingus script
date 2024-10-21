@@ -1,96 +1,97 @@
--- Load Kavo UI Library
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("dingus script for the goobers who play it", "Ocean")
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
--- Create Main Tab
-local MainTab = Window:NewTab("Main")
+local Window = Rayfield:CreateWindow({
+    Name = "dingus script by @decryp1",
+    LoadingTitle = "loading <33",
+    LoadingSubtitle = "still loading !?!?",
+    ConfigurationSaving = {
+       Enabled = false,
+       FolderName = nil,
+       FileName = "dingusScriptUI"
+    },
+    KeySystem = false
+})
 
--- Create Sections
-local ESPSection = MainTab:NewSection("Dingus ESP")
-local HunterSection = MainTab:NewSection("Kill All Hiders") 
+local MainTab = Window:CreateTab("Main", 4483362458)
+local ExtraTab = Window:CreateTab("Extra", 4483362458)
+local CreditsTab = Window:CreateTab("Credits", 4483362458)
 
--- Variables
 local ESPEnabled = false
 local ESPConnection
 
--- Dingus ESP Script (As Function)
 local function DingusESP()
-    -- Services
     local Players = game:GetService("Players")
     local Workspace = game:GetService("Workspace")
 
-    -- Function to create ESP
     local function createESP(part)
         local espBox = Instance.new("BoxHandleAdornment")
-        espBox.Size = part.Size + Vector3.new(0.1, 0.1, 0.1) -- Adjust size for better visibility
+        espBox.Size = part.Size + Vector3.new(0.1, 0.1, 0.1)
         espBox.AlwaysOnTop = true
         espBox.ZIndex = 10
         espBox.Adornee = part
-        espBox.Color3 = Color3.new(0.517647, 0.000000, 1.000000) -- Red color for ESP
+        espBox.Color3 = Color3.new(0.517647, 0.000000, 1.000000)
         espBox.Transparency = 0.7
         espBox.Parent = part
     end
 
-    -- Function to check players in Workspace
     local function checkForPlayers()
         for _, player in ipairs(Players:GetPlayers()) do
-            -- Check if the player's name exists in the Workspace
             local character = Workspace:FindFirstChild(player.Name)
             if character and character:FindFirstChild("Rig") and character.Rig:FindFirstChild("HumanoidRootPart") then
-                -- Apply ESP to HumanoidRootPart
                 local humanoidRootPart = character.Rig.HumanoidRootPart
                 createESP(humanoidRootPart)
             end
         end
     end
 
-    -- Connect to Player Added/Removing events to update ESP in real-time
     ESPConnection = Players.PlayerAdded:Connect(checkForPlayers)
     Players.PlayerRemoving:Connect(checkForPlayers)
 
-    -- Initial run
     checkForPlayers()
 end
 
-
-
--- Kill ALl Script
 local function executeForMatchingPlayers(hunterName)
     local Players = game:GetService("Players")
     local Workspace = game:GetService("Workspace")
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-    -- Loop through each player in the Players service
     for _, player in ipairs(Players:GetPlayers()) do
-        -- Skip the hunter (the player who is running the script)
         if player.Name ~= hunterName then
-            -- Check if a part with the player's name exists in the workspace
             local playerPart = Workspace:FindFirstChild(player.Name)
             if playerPart then
-                -- Create the arguments table with the matching player's part
                 local args = {
-                    [1] = playerPart -- Use the player's part in the workspace
+                    [1] = playerPart
                 }
-
-                -- Invoke the server for this player part
                 ReplicatedStorage:WaitForChild("Modules"):WaitForChild("TypedRemotes"):WaitForChild("24"):InvokeServer(unpack(args))
-
-                -- Wait 0.1 seconds before moving on to the next player
                 wait(0.1)
             end
         end
     end
 end
 
--- Add Toggle for Dingus ESP
-ESPSection:NewButton("Hider ESP", "Enable/Disable Dingus ESP", function(state)
-    ESPEnabled = true
-    DingusESP()
-end)
+MainTab:CreateButton({
+    Name = "Hider ESP",
+    Callback = function()
+        ESPEnabled = true
+        DingusESP()
+    end
+})
 
+MainTab:CreateButton({
+    Name = "Kill All Players",
+    Callback = function()
+        local hunter = game.Players.LocalPlayer.Name
+        executeForMatchingPlayers(hunter)
+    end
+})
 
--- Add Button for Hunter script
-HunterSection:NewButton("Kill All Players", "kill people", function()
-    local hunter = game.Players.LocalPlayer.Name
-    executeForMatchingPlayers(hunter)
-end)
+ExtraTab:CreateButton({
+    Name = "Infinite Yield",
+    Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+    end
+})
+
+CreditsTab:CreateSection("script made by @decryp1 on yt")
+
+Rayfield:LoadConfiguration()
