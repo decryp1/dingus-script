@@ -7,7 +7,7 @@ local Window = Rayfield:CreateWindow({
     ConfigurationSaving = {
        Enabled = false,
        FolderName = nil,
-       FileName = "dingusScriptUI"
+       FileName = "herklehubdingus"
     },
     KeySystem = false
 })
@@ -16,14 +16,14 @@ local MainTab = Window:CreateTab("Main", 4483362458)
 local ExtraTab = Window:CreateTab("Extra", 4483362458)
 local CreditsTab = Window:CreateTab("Credits", 4483362458)
 
-local ESPEnabled = false
-local ESPConnection
+local esp = false
+local espheartbeat
 
-local function DingusESP()
+local function espfordingles()
     local Players = game:GetService("Players")
     local Workspace = game:GetService("Workspace")
 
-    local function createESP(part)
+    local function makeesp(part)
         local espBox = Instance.new("BoxHandleAdornment")
         espBox.Size = part.Size + Vector3.new(0.1, 0.1, 0.1)
         espBox.AlwaysOnTop = true
@@ -34,23 +34,23 @@ local function DingusESP()
         espBox.Parent = part
     end
 
-    local function checkForPlayers()
+    local function plrcheck()
         for _, player in ipairs(Players:GetPlayers()) do
             local character = Workspace:FindFirstChild(player.Name)
             if character and character:FindFirstChild("Rig") and character.Rig:FindFirstChild("HumanoidRootPart") then
                 local humanoidRootPart = character.Rig.HumanoidRootPart
-                createESP(humanoidRootPart)
+                makeesp(humanoidRootPart)
             end
         end
     end
 
-    ESPConnection = Players.PlayerAdded:Connect(checkForPlayers)
-    Players.PlayerRemoving:Connect(checkForPlayers)
+    espheartbeat = Players.PlayerAdded:Connect(plrcheck)
+    Players.PlayerRemoving:Connect(plrcheck)
 
-    checkForPlayers()
+    plrcheck()
 end
 
-local function executeForMatchingPlayers(hunterName)
+local function matchandkillplrs(hunterName)
     local Players = game:GetService("Players")
     local Workspace = game:GetService("Workspace")
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -72,8 +72,8 @@ end
 MainTab:CreateButton({
     Name = "Hider ESP",
     Callback = function()
-        ESPEnabled = true
-        DingusESP()
+        esp = true
+        espfordingles()
     end
 })
 
@@ -81,7 +81,7 @@ MainTab:CreateButton({
     Name = "Kill All Players",
     Callback = function()
         local hunter = game.Players.LocalPlayer.Name
-        executeForMatchingPlayers(hunter)
+        matchandkillplrs(hunter)
     end
 })
 
